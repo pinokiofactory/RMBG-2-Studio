@@ -14,8 +14,8 @@ An enhanced Pinokio app (with install files) built on [BRIA-RMBG-2.0](https://hu
 ## Pinokio UI: 
 Tabbed UI:  Background Removal | Composition Workspace | Batch Removal
 <p align="center">
-  <a href="https://github.com/user-attachments/assets/d61a35eb-f426-4bd7-8a6b-f0f9ae6423d7" style="vertical-align: top; display: inline-block;">
-    <img src="https://github.com/user-attachments/assets/d61a35eb-f426-4bd7-8a6b-f0f9ae6423d7" width="32%" alt="Background Removal">
+  <a href="https://github.com/user-attachments/assets/3e11cb13-b0af-4701-973d-e973f982a6aa" style="vertical-align: top; display: inline-block;">
+    <img src="https://github.com/user-attachments/assets/3e11cb13-b0af-4701-973d-e973f982a6aa" width="32%" alt="Background Removal">
   </a>
   <a href="https://github.com/user-attachments/assets/50d138c8-4729-4855-889c-afbd625f6e20" style="vertical-align: top; display: inline-block;">
     <img src="https://github.com/user-attachments/assets/50d138c8-4729-4855-889c-afbd625f6e20" width="32%" alt="Image Composition">
@@ -25,8 +25,10 @@ Tabbed UI:  Background Removal | Composition Workspace | Batch Removal
   </a>
 </p>
 
+![RMBG1](https://github.com/user-attachments/assets/3e11cb13-b0af-4701-973d-e973f982a6aa)
 
 
+https://github.com/user-attachments/assets/3e11cb13-b0af-4701-973d-e973f982a6aa
 
 ### Credits & License
 - Built on [BRIA-RMBG-2.0](https://huggingface.co/briaai/RMBG-2.0)
