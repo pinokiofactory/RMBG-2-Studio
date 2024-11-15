@@ -27,7 +27,7 @@ Tabbed UI:  Background Removal | Composition Workspace | Batch Removal
 
 
 
-https://github.com/user-attachments/assets/3e11cb13-b0af-4701-973d-e973f982a6aa
+
 
 ### Credits & License
 - Built on [BRIA-RMBG-2.0](https://huggingface.co/briaai/RMBG-2.0)
