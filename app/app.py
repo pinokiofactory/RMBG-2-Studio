@@ -1,27 +1,31 @@
+# Standard library imports
 import os
-import gradio as gr
-from gradio_imageslider import ImageSlider
-from loadimg import load_img
-from transformers import AutoModelForImageSegmentation
-import torch
-from torchvision import transforms
-from datetime import datetime
-import devicetorch
-from PIL import Image
-import numpy as np
-import subprocess
-import requests
-from io import BytesIO
 import re
 import glob
-from pathlib import Path
-from tqdm import tqdm
-from PIL import ImageEnhance, ImageOps
-import colorsys
-import cv2
-
-
 import warnings
+import subprocess
+from datetime import datetime
+from pathlib import Path
+from io import BytesIO
+
+# Third-party imports
+import cv2
+import torch
+import gradio as gr
+import numpy as np
+import requests
+import colorsys
+from tqdm import tqdm
+import devicetorch
+from PIL import Image, ImageEnhance, ImageOps
+from torchvision import transforms
+from gradio_imageslider import ImageSlider
+from loadimg import load_img  # Image loading utility
+
+# ML/AI framework imports
+from transformers import AutoModelForImageSegmentation  # Hugging Face model for background removal
+
+# Configure warnings
 warnings.filterwarnings('ignore', category=FutureWarning, module='timm')
 
 device = devicetorch.get(torch)
@@ -37,6 +41,7 @@ transform_image = transforms.Compose([
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
 ])
+
 
 output_folder = '../output_images'
 if not os.path.exists(output_folder):
@@ -56,6 +61,7 @@ def open_output_folder():
         return "✅ Opened outputs folder. Tends to be shy and hides behind active windows."
     except Exception as e:
         return f"❌ Error opening folder: {str(e)}"
+
 
 def is_valid_image_url(url):
     """Validate if the URL points to an image file."""
@@ -211,7 +217,6 @@ def update_gallery():
     return gallery_paths
 
 
-        
 def combine_images(fg_path, bg_path, scale, x_offset=0, y_offset=0, flip_h=False, flip_v=False, 
                   rotation=0, brightness=1.0, contrast=1.0, saturation=1.0, 
                   temperature=0, tint_color=None, tint_strength=0):
@@ -261,8 +266,6 @@ def combine_images(fg_path, bg_path, scale, x_offset=0, y_offset=0, flip_h=False
     
     return result
 
-def reset_controls():
-    return 100, 0, 0, 0, False, False
 
 def calculate_fit_scale(fg_image, bg_image):
     """Calculate scale percentage to fit foreground within background"""
@@ -351,7 +354,10 @@ def apply_color_adjustments(image, brightness=1.0, contrast=1.0, saturation=1.0,
     
     return img
 
-    
+
+def reset_controls():
+    return 100, 0, 0, 0, False, False
+
 def reset_color_controls():
     """Reset all color grading controls to default values"""
     return 1.0, 1.0, 1.0, 0, "#000000", 0
