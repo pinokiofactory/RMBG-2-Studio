@@ -11,22 +11,24 @@ An enhanced Pinokio app (with install files) built on [BRIA-RMBG-2.0](https://hu
 - Batch Processing: Process multiple images at once
 - URL Support: Load images directly from URLs
 
-## Pinokio UI:
+## Pinokio UI: 
+Tabbed UI:  Background Removal | Composition Workspace | Batch Removal
 <p align="center">
-  <a href="https://github.com/user-attachments/assets/648a7b95-cab4-4f2d-a7eb-94c1ec56b042" style="vertical-align: top; display: inline-block;">
-    <img src="https://github.com/user-attachments/assets/648a7b95-cab4-4f2d-a7eb-94c1ec56b042" width="32%" alt="Background Removal">
+  <a href="https://github.com/user-attachments/assets/d61a35eb-f426-4bd7-8a6b-f0f9ae6423d7" style="vertical-align: top; display: inline-block;">
+    <img src="https://github.com/user-attachments/assets/d61a35eb-f426-4bd7-8a6b-f0f9ae6423d7" width="32%" alt="Background Removal">
   </a>
-  <a href="https://github.com/user-attachments/assets/b729e389-7ed2-4e5f-84ca-b99e4e54e0b1" style="vertical-align: top; display: inline-block;">
-    <img src="https://github.com/user-attachments/assets/b729e389-7ed2-4e5f-84ca-b99e4e54e0b1" width="32%" alt="Image Composition">
+  <a href="https://github.com/user-attachments/assets/50d138c8-4729-4855-889c-afbd625f6e20" style="vertical-align: top; display: inline-block;">
+    <img src="https://github.com/user-attachments/assets/50d138c8-4729-4855-889c-afbd625f6e20" width="32%" alt="Image Composition">
   </a>
-  <a href="https://github.com/user-attachments/assets/b6fc09f3-e0a1-4f36-b82e-79526cfa9d03" style="vertical-align: top; display: inline-block;">
-    <img src="https://github.com/user-attachments/assets/b6fc09f3-e0a1-4f36-b82e-79526cfa9d03" width="32%" alt="Batch Processing">
+  <a href="https://github.com/user-attachments/assets/df4b3ab7-6739-490e-ad29-50a77088ebd1" style="vertical-align: top; display: inline-block;">
+    <img src="https://github.com/user-attachments/assets/df4b3ab7-6739-490e-ad29-50a77088ebd1" width="32%" alt="Batch Processing">
   </a>
 </p>
 
 
 
-## Credits & License
+
+### Credits & License
 - Built on [BRIA-RMBG-2.0](https://huggingface.co/briaai/RMBG-2.0)
 - BRIA-RMBG-2.0 model is released under a Creative Commons license for non-commercial use only
 - Commercial use of BRIA-RMBG-2.0 requires a commercial agreement with BRIA. [Contact BRIA](https://bria.ai/contact-us) for commercial licensing
@@ -35,8 +37,7 @@ An enhanced Pinokio app (with install files) built on [BRIA-RMBG-2.0](https://hu
 
 
 
-## Original BRIA-RMBG-2.0 README (Condensed)
-*The following is a condensed version of the original README. For the complete documentation, please visit [BRIA-RMBG-2.0](https://huggingface.co/briaai/RMBG-2.0)*
+### Original BRIA-RMBG-2.0 README (Condensed)
 
 
 # BRIA Background Removal v2.0 Model Card
