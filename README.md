@@ -12,7 +12,17 @@ An enhanced Pinokio app (with install files) built on [BRIA-RMBG-2.0](https://hu
 - URL Support: Load images directly from URLs
 
 ## Pinokio UI:
-
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/648a7b95-cab4-4f2d-a7eb-94c1ec56b042" style="vertical-align: top; display: inline-block;">
+    <img src="https://github.com/user-attachments/assets/648a7b95-cab4-4f2d-a7eb-94c1ec56b042" width="32%" alt="Background Removal">
+  </a>
+  <a href="https://github.com/user-attachments/assets/b729e389-7ed2-4e5f-84ca-b99e4e54e0b1" style="vertical-align: top; display: inline-block;">
+    <img src="https://github.com/user-attachments/assets/b729e389-7ed2-4e5f-84ca-b99e4e54e0b1" width="32%" alt="Image Composition">
+  </a>
+  <a href="https://github.com/user-attachments/assets/b6fc09f3-e0a1-4f36-b82e-79526cfa9d03" style="vertical-align: top; display: inline-block;">
+    <img src="https://github.com/user-attachments/assets/b6fc09f3-e0a1-4f36-b82e-79526cfa9d03" width="32%" alt="Batch Processing">
+  </a>
+</p>
 
 
 
