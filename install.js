@@ -17,6 +17,12 @@ module.exports = {
         path: "app",
         message:"pip install -r requirements.txt",
       }
+    },
+    {
+      method: "fs.link",
+      params: {
+        venv: "app/env"
+      }
     }
   ]
 }
