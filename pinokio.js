@@ -2,7 +2,7 @@ const path = require('path')
 module.exports = {
   version: "2.0",
   title: "RMBG-2-Studio",
-  description: "Enhanced background remove and replace app built around BRIA-RMBG-2.0",
+  description: "Enhanced background remove and replace app built around BRIA-RMBG-2.0 https://huggingface.co/briaai/RMBG-2.0",
   icon: "icon.png",
   menu: async (kernel, info) => {
     let installed = info.exists("app/env")
