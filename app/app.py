@@ -43,7 +43,11 @@ transform_image = transforms.Compose([
 ])
 
 
-output_folder = '../output_images'
+MAX_GALLERY_IMAGES = 1000
+output_folder = '../output_images' # can be changed to "C:/path/to/save"
+
+
+
 if not os.path.exists(output_folder):
     os.makedirs(output_folder)
 
@@ -128,12 +132,20 @@ def process_input(input_data):
         
         
 def batch_process_images(files, progress=gr.Progress()):
-    """Process multiple images and return statistics."""
+    """Process multiple images with enhanced error handling and validation"""
+    if not files:
+        return "⚠️ No files selected. Please upload some images to process.", None
+    
     results = {
         'successful': 0,
         'failed': 0,
-        'processed_files': []
+        'skipped': 0,
+        'processed_files': [],
+        'error_files': []
     }
+    
+    # Valid image extensions (case-insensitive)
+    valid_extensions = {'.jpg', '.jpeg', '.png', '.webp', '.gif'}
     
     try:
         total_files = len(files)
@@ -141,6 +153,13 @@ def batch_process_images(files, progress=gr.Progress()):
             try:
                 # Update progress bar
                 progress(i/total_files, f"Processing {i+1}/{total_files}")
+                
+                # Check file extension
+                file_ext = os.path.splitext(file.name)[1].lower()
+                if file_ext not in valid_extensions:
+                    results['skipped'] += 1
+                    results['error_files'].append(f"{os.path.basename(file.name)} (Unsupported format)")
+                    continue
                 
                 # Load and process image
                 img = load_img(file.name, output_type="pil")
@@ -158,15 +177,30 @@ def batch_process_images(files, progress=gr.Progress()):
                 
             except Exception as e:
                 results['failed'] += 1
-                print(f"Failed to process {file.name}: {str(e)}")
+                results['error_files'].append(f"{os.path.basename(file.name)} ({str(e)})")
                 
-        return (f"✅ Processing complete!\n"
-                f"Successfully processed: {results['successful']} images\n"
-                f"Failed: {results['failed']} images\n"
-                f"Output saved to: {output_folder}"), update_gallery()
+        # Prepare detailed status message
+        status_parts = [
+            "✅ Processing complete!",
+            f"Successfully processed: {results['successful']} images",
+        ]
+        
+        if results['skipped'] > 0:
+            status_parts.append(f"Skipped: {results['skipped']} files (unsupported format)")
+        
+        if results['failed'] > 0:
+            status_parts.append(f"Failed: {results['failed']} images")
+            
+        if results['error_files']:
+            status_parts.append("\nDetails of skipped/failed files:")
+            status_parts.extend(f"- {err}" for err in results['error_files'])
+            
+        status_parts.append(f"\nOutput saved to: {output_folder}")
+        
+        return "\n".join(status_parts), update_gallery()
                 
     except Exception as e:
-        return f"❌ Batch processing error: {str(e)}", update_gallery()
+        return f"❌ Unexpected error during batch processing: {str(e)}", update_gallery()
         
         
 def fn(image_input):
@@ -206,14 +240,17 @@ def process(image):
 gallery_paths = []
 
 def update_gallery():
+    """Update gallery with most recent images, limited to prevent UI overload"""
     global gallery_paths
-    gallery_paths = [
+    all_images = [
         os.path.join(output_folder, f) 
         for f in os.listdir(output_folder) 
-        if f.endswith(".png")  # Include all PNG files
+        if f.endswith(".png")
     ]
     # Sort by file modification time, newest first
-    gallery_paths.sort(key=lambda x: os.path.getmtime(x), reverse=True)
+    all_images.sort(key=lambda x: os.path.getmtime(x), reverse=True)
+    # Limit to most recent images
+    gallery_paths = all_images[:MAX_GALLERY_IMAGES]
     return gallery_paths
 
 
@@ -355,12 +392,59 @@ def apply_color_adjustments(image, brightness=1.0, contrast=1.0, saturation=1.0,
     return img
 
 
+def update_preview(fg, bg, scale, x, y, rotation, flip_h, flip_v, 
+                  brightness, contrast, saturation, temperature, 
+                  tint_color, tint_strength):
+    if not fg or not bg:
+        return None
+    return combine_images(
+        fg, bg, scale, x, y, flip_h, flip_v, rotation,
+        brightness, contrast, saturation, temperature, 
+        tint_color, tint_strength
+    )
+                
 def reset_controls():
     return 100, 0, 0, 0, False, False
 
 def reset_color_controls():
     """Reset all color grading controls to default values"""
     return 1.0, 1.0, 1.0, 0, "#000000", 0
+
+def handle_fg_change(fg, bg, *current_values):
+    """
+    Wrapper function to handle foreground image changes with control resets
+    Returns the new image with default control values
+    """
+    # Get default values
+    default_placement = reset_controls()
+    default_colors = reset_color_controls()
+    
+    # If we have a foreground image, create preview with default values
+    if fg is not None:
+        preview = combine_images(
+            fg, bg,
+            scale=default_placement[0],          # 100
+            x_offset=default_placement[1],       # 0
+            y_offset=default_placement[2],       # 0
+            rotation=default_placement[3],       # 0
+            flip_h=default_placement[4],         # False
+            flip_v=default_placement[5],         # False
+            brightness=default_colors[0],        # 1.0
+            contrast=default_colors[1],          # 1.0
+            saturation=default_colors[2],        # 1.0
+            temperature=default_colors[3],       # 0
+            tint_color=default_colors[4],        # "#000000"
+            tint_strength=default_colors[5]      # 0
+        )
+    else:
+        preview = None
+        
+    # Return all values: preview image, placement controls, color controls
+    return (
+        preview,
+        *default_placement,
+        *default_colors
+    )
 
     
 def save_combined(image):
@@ -429,7 +513,7 @@ with gr.Blocks(css=css) as demo:
     # Shared gallery component outside of tabs
     with gr.Column():
         shared_gallery = gr.Gallery(
-            label="image gallery",
+            label=f"Image Gallery (Displaying (up to) the most recent {MAX_GALLERY_IMAGES:,} images in output folder)", 
             columns=5,
             rows=3,
             height="auto",
@@ -465,13 +549,14 @@ with gr.Blocks(css=css) as demo:
                         info="💡 Paste a direct link to an image. Right-click an image online and select 'Copy image address'"
                     )
                 with gr.Column():    
-                    status_text = gr.Textbox(label=None, interactive=False, show_label=False, container=False)
-                    open_folder_btn = gr.Button("📂 Open Output Folder", size="sm")
-                    
-            # Update event handlers
-            url_input.submit(fn, inputs=url_input, outputs=[slider1, shared_gallery, status_text])
-            image.change(fn, inputs=image, outputs=[slider1, shared_gallery, status_text])
-            open_folder_btn.click(open_output_folder, outputs=status_text)
+                    status_text_1 = gr.Textbox(label=None, interactive=False, show_label=False, container=False)
+                    open_folder_btn_1 = gr.Button("📂 Open Output Folder", size="sm")
+
+            # Tab1 event handlers
+            open_folder_btn_1.click(open_output_folder, outputs=status_text_1)
+            url_input.submit(fn, inputs=url_input, outputs=[slider1, shared_gallery, status_text_1])
+            image.change(fn, inputs=image, outputs=[slider1, shared_gallery, status_text_1])
+
         
         with gr.Tab("Process & Replace"):
             with gr.Row():
@@ -520,6 +605,7 @@ with gr.Blocks(css=css) as demo:
                             label="Move Up/Down",
                             info="Right to move up, left to move down"
                         )
+                        
                 with gr.Row():
                     flip_h = gr.Checkbox(
                         label="Flip Horizontally",
@@ -542,7 +628,6 @@ with gr.Blocks(css=css) as demo:
                         outputs=scale_slider
                     )        
                 
-                
             with gr.Accordion("Color Grading - basic, no substitute for a real image editor!"):  
                 with gr.Row():                
                     with gr.Column(scale=1):
@@ -558,6 +643,7 @@ with gr.Blocks(css=css) as demo:
                             minimum=0.0, maximum=2.0, value=1.0, step=0.05,
                             label="Saturation", info="Adjust color intensity"
                         )
+                        
                     with gr.Column(scale=1):
                         tint_color = gr.ColorPicker(
                             label="Tint Color", 
@@ -572,10 +658,8 @@ with gr.Blocks(css=css) as demo:
                             label="Temperature", info="Adjust warm/cool color balance"
                         )
                       
-                        
                 with gr.Row():
                     reset_color_btn = gr.Button("↺ Reset Colors", size="sm")
-
                     reset_color_btn.click(
                         reset_color_controls,
                         outputs=[brightness_slider, contrast_slider, saturation_slider,
@@ -585,35 +669,24 @@ with gr.Blocks(css=css) as demo:
             with gr.Row():
                 with gr.Column():
                     save_btn = gr.Button("💾 Save Image", variant="primary", size="sm")
-                    open_folder_btn = gr.Button("📂 Open Output Folder", size="sm")
-                status_text = gr.Textbox(label=None, interactive=False, show_label=False, container=False)
+                    open_folder_btn_2 = gr.Button("📂 Open Output Folder", size="sm")
+                with gr.Column():
+                    status_text_2 = gr.Textbox(label=None, interactive=False, show_label=False, container=False)
                 
-                open_folder_btn.click(
-                    open_output_folder,
-                    outputs=status_text
-                )        
-                
-            def update_preview(fg, bg, scale, x, y, rotation, flip_h, flip_v, 
-                              brightness, contrast, saturation, temperature, 
-                              tint_color, tint_strength):
-                if not fg or not bg:
-                    return None
-                return combine_images(
-                    fg, bg, scale, x, y, flip_h, flip_v, rotation,
-                    brightness, contrast, saturation, temperature, 
-                    tint_color, tint_strength
-                )
+            # Tab2 event handlers   
+            open_folder_btn_2.click(open_output_folder, outputs=status_text_2) 
+            save_btn.click(save_combined, inputs=[preview_image], outputs=[shared_gallery, status_text_2])
             
             color_controls = [
                 brightness_slider, contrast_slider, saturation_slider,
                 temperature_slider, tint_color, tint_strength
             ]
-            
+    
             all_controls = [
                 selected_fg, bg_image, scale_slider, x_offset, y_offset,
                 rotation, flip_h, flip_v, *color_controls
             ]
-            
+    
             for control in all_controls:
                 control.change(
                     update_preview,
@@ -623,40 +696,37 @@ with gr.Blocks(css=css) as demo:
                 
             # When a new foreground image is loaded
             selected_fg.change(
-                lambda: (
-                    # Reset all controls to default values
-                    *reset_controls(),  # Returns (100, 0, 0, 0, False, False)
-                    *reset_color_controls(),  # Returns (1.0, 1.0, 1.0, 0, "#000000", 0)
-                ),
+                handle_fg_change,
+                inputs=[selected_fg, bg_image],  # Add current bg_image as input
                 outputs=[
+                    preview_image,  # Add preview_image as first output
                     scale_slider, x_offset, y_offset, rotation, flip_h, flip_v,
                     brightness_slider, contrast_slider, saturation_slider,
                     temperature_slider, tint_color, tint_strength
                 ]
             )
-                
-                
-                
-                
+            
+            
         with gr.Tab("Batch Processing"):
             gr.Markdown("""
             ### 🎯 Batch Background Removal
 
-            Upload multiple images to process them all at once.
+            #### How to batch load:
+            - 📄 Drag & drop individual image files *(folders not supported)*
+            - 📄 Click load window and ctrl+click (or ⌘+click on Mac) to select multiple files
 
-            - Two ways to upload multiple files:
-                - Drag & drop files 
-                - Click the file upload window below and hold ctrl+click (or ⌘+click on Mac) to select multiple files
-            - Clear files via 'x' button in upload window.
+            #### Supported Files:
+            - Images only: JPG, PNG, WEBP, GIF
+            - Individual files only (no folders) <- Gradio expressly disallows folder loading
+            - Clear files via 'x' button in upload window
             """)
-            
-            with gr.Row():
-                file_output = gr.File(
-                    file_count="multiple",
-                    label="Upload Images",
-                    file_types=["image"],
-                    scale=2
-                )
+                
+            file_output = gr.File(
+                file_count="multiple",
+                label="Load Images",
+                # Remove file_types restriction to allow our custom handling
+                scale=2,
+            )
             
             with gr.Row():
                 with gr.Column(scale=1):
@@ -666,30 +736,27 @@ with gr.Blocks(css=css) as demo:
                     #### Tips:
                     - Processed images will appear in the gallery above
                     - Original filenames will be preserved with '_nobg' suffix
-                    - Supported formats: JPG, PNG, WEBP
+                    - Gallery has been limited to displaying the most recent 1000 images in output folder
                     """)
-                    open_folder_btn = gr.Button("📂 Open Output Folder", size="sm")
+                    open_folder_btn_3 = gr.Button("📂 Open Output Folder", size="sm")
+                    
+            # Tab3 event handlers                       
+            open_folder_btn_3.click(open_output_folder, outputs=status) 
+            process_button.click(batch_process_images, inputs=[file_output], outputs=[status, shared_gallery])
+ 
         
-        process_button.click(
-            batch_process_images,
-            inputs=[file_output],
-            outputs=[status, shared_gallery]
-        )
-        save_btn.click(
-            save_combined,
-            inputs=[preview_image],
-            outputs=[shared_gallery, status_text]
-        )
-        open_folder_btn.click(
-            open_output_folder,
-            outputs=status_text
-        )
-
-    # with gr.Tab("From URL"):
-        # text = gr.Textbox(label="Paste an image URL")
-        # slider2 = ImageSlider(label="Before/After", type="pil")
-        # output_file2 = gr.File(label="Download PNG")
-        # text.submit(fn, inputs=text, outputs=[slider2, output_file2])
-
+    # When a new foreground image is loaded
+    selected_fg.change(
+        lambda: (
+            # Reset all controls to default values
+            *reset_controls(),  # Returns (100, 0, 0, 0, False, False)
+            *reset_color_controls(),  # Returns (1.0, 1.0, 1.0, 0, "#000000", 0)
+        ),
+        outputs=[
+            scale_slider, x_offset, y_offset, rotation, flip_h, flip_v,
+            brightness_slider, contrast_slider, saturation_slider,
+            temperature_slider, tint_color, tint_strength
+        ]
+    )
         
 demo.launch(share=False)
