@@ -14,18 +14,16 @@ An enhanced Pinokio app (with install files) built on [BRIA-RMBG-2.0](https://hu
 ## Pinokio UI: 
 Tabbed UI:  Background Removal | Composition Workspace | Batch Removal
 <p align="center">
-  <a href="https://github.com/user-attachments/assets/3e11cb13-b0af-4701-973d-e973f982a6aa" style="vertical-align: top; display: inline-block;">
-    <img src="https://github.com/user-attachments/assets/3e11cb13-b0af-4701-973d-e973f982a6aa" width="32%" alt="Background Removal">
+  <a href="screenshot/RMBG1.png" style="vertical-align: top; display: inline-block;">
+    <img src="screenshot/RMBG1.png" width="32%" alt="Background Removal">
   </a>
-  <a href="https://github.com/user-attachments/assets/50d138c8-4729-4855-889c-afbd625f6e20" style="vertical-align: top; display: inline-block;">
-    <img src="https://github.com/user-attachments/assets/50d138c8-4729-4855-889c-afbd625f6e20" width="32%" alt="Image Composition">
+  <a href="screenshot/RMBG2.png" style="vertical-align: top; display: inline-block;">
+    <img src="screenshot/RMBG2.png" width="32%" alt="Image Composition">
   </a>
-  <a href="https://github.com/user-attachments/assets/df4b3ab7-6739-490e-ad29-50a77088ebd1" style="vertical-align: top; display: inline-block;">
-    <img src="https://github.com/user-attachments/assets/df4b3ab7-6739-490e-ad29-50a77088ebd1" width="32%" alt="Batch Processing">
+  <a href="screenshot/RMBG3.png" style="vertical-align: top; display: inline-block;">
+    <img src="screenshot/RMBG3.png" width="32%" alt="Batch Processing">
   </a>
 </p>
-
-
 
 
 
