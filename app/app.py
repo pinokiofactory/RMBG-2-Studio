@@ -59,10 +59,12 @@ def open_output_folder():
     folder_path = os.path.abspath(output_folder)
     try:
         if os.name == 'nt':  # Windows
-            os.startfile(folder_path)
-        elif os.name == 'posix':  # macOS and Linux
-            subprocess.run(['xdg-open' if os.name == 'posix' else 'open', folder_path])
-        return "✅ Opened outputs folder. Tends to be shy and hides behind active windows."
+            subprocess.run(['explorer', folder_path])
+        elif sys.platform == 'darwin':  # macOS
+            subprocess.run(['open', folder_path])
+        else:  # Linux
+            subprocess.run(['xdg-open', folder_path])
+        return "✅ Opened outputs folder"
     except Exception as e:
         return f"❌ Error opening folder: {str(e)}"
 
