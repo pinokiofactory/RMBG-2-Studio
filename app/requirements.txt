@@ -1,7 +1,7 @@
 devicetorch
 opencv-python
 pillow
-numpy
+numpy==1.26.4
 timm
 kornia
 prettytable
