@@ -43,7 +43,7 @@ module.exports = {
         "message": "pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 numpy==1.26.4"
       }
     },
-    // mac
+    // apple mac
     {
       "when": "{{platform === 'darwin' && arch === 'arm64'}}",
       "method": "shell.run",
