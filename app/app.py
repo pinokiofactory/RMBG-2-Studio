@@ -23,6 +23,11 @@ from torchvision import transforms
 from gradio_imageslider import ImageSlider
 from loadimg import load_img  # Image loading utility
 
+# change httx/httpcore default from INFO to stop its startup log interferring with URL capture
+import logging
+logging.getLogger('httpx').setLevel(logging.WARNING)
+logging.getLogger('httpcore').setLevel(logging.WARNING)  
+
 # ML/AI framework imports
 from transformers import AutoModelForImageSegmentation  # Hugging Face model for background removal
 
