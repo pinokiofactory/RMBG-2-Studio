@@ -8,7 +8,7 @@ module.exports = {
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
         "message": [
-          "uv pip install --pre torch torchvision torchaudio --index-url https://download.pytorch.org/whl/nightly/cu128"
+          "uv pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128"
         ]
       },
       "next": null
@@ -20,7 +20,7 @@ module.exports = {
       "params": {
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
-        "message": "uv pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 {{args && args.xformers ? 'xformers' : ''}}  --index-url https://download.pytorch.org/whl/cu121"
+        "message": "uv pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 {{args && args.xformers ? 'xformers' : ''}} --index-url https://download.pytorch.org/whl/cu124"
       }
     },
     // windows amd
@@ -40,7 +40,7 @@ module.exports = {
       "params": {
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
-        "message": "uv pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 numpy==1.26.4"
+        "message": "uv pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 numpy==1.26.4"
       }
     },
     // apple mac
@@ -50,7 +50,7 @@ module.exports = {
       "params": {
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
-        "message": "uv pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1"
+        "message": "uv pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0"
       }
     },
     // intel mac
@@ -70,7 +70,7 @@ module.exports = {
       "params": {
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
-        "message": "uv pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 {{args && args.xformers ? 'xformers' : ''}}   --index-url https://download.pytorch.org/whl/cu121"
+        "message": "uv pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 {{args && args.xformers ? 'xformers' : ''}} --index-url https://download.pytorch.org/whl/cu124"
       }
     },
     // linux rocm (amd)
@@ -80,7 +80,7 @@ module.exports = {
       "params": {
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
-        "message": "uv pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/rocm6.0"
+        "message": "uv pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/rocm6.2.4"
       }
     },
     // linux cpu
@@ -90,7 +90,7 @@ module.exports = {
       "params": {
         "venv": "{{args && args.venv ? args.venv : null}}",
         "path": "{{args && args.path ? args.path : '.'}}",
-        "message": "uv pip install torch==2.3.1 torchvision==0.18.1 torchaudio==2.3.1 --index-url https://download.pytorch.org/whl/cpu"
+        "message": "uv pip install torch==2.6.0 torchvision==0.21.0 torchaudio==2.6.0 --index-url https://download.pytorch.org/whl/cpu"
       }
     }
   ]
