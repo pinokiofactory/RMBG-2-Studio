@@ -1,4 +1,7 @@
 module.exports = {
+  requires: {
+    bundle: "ai",
+  },
   daemon: true,
   run: [
     // Edit this step to customize your app's launch command
