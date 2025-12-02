@@ -1,4 +1,7 @@
 module.exports = {
+  requires: {
+    bundle: "ai",
+  },
   run: [
     {
       method: "script.start",
